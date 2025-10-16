@@ -1,0 +1,40 @@
+import itertools
+
+variables = ['A', 'B', 'C']
+
+def alpha(A, B, C):
+    return A or B 
+
+def KB(A, B, C):
+    return (A or C) and (B or (not C)) 
+
+def A_or_C(A, B, C):
+    return A or C
+
+def B_or_notC(A, B, C):
+    return B or (not C)
+
+print(f"{'A':<6}{'B':<6}{'C':<6}{'A∨C':<8}{'B∨¬C':<8}{'KB':<8}{'α (A∨B)':<10}")
+print("-" * 55)
+
+kb_true_models = []
+
+for A, B, C in itertools.product([False, True], repeat=3):
+    ac = A_or_C(A, B, C)
+    bnc = B_or_notC(A, B, C)
+    kb = KB(A, B, C)
+    a_expr = alpha(A, B, C)
+
+    if kb:
+        kb_true_models.append((A, B, C))
+    
+    print(f"{A!s:<6}{B!s:<6}{C!s:<6}{ac!s:<8}{bnc!s:<8}{kb!s:<8}{a_expr!s:<10}")
+
+def entails():
+    for A, B, C in kb_true_models:
+        if not alpha(A, B, C):
+            return False
+    return True
+
+print("\nModels where KB is true:", kb_true_models)
+print("\nDoes KB entail α (A ∨ B)? :", entails())
